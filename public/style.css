@@ -1,0 +1,105 @@
+:root {
+  --azul: #255de9;
+  --tinta: #102842;
+  --borda: #e1e7ef;
+  --suave: #52657c;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: var(--tinta);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle, #c4d1e2 1px, transparent 1.4px) 0 0 / 24px 24px, #eff4f9;
+}
+.cabecalho {
+  position: relative;
+  padding: 16px 56px;
+  text-align: center;
+  background: #f7fafd;
+  border-bottom: 1px solid var(--borda);
+}
+.cabecalho strong, h1, h2 { font-family: Georgia, serif; }
+.cabecalho strong { display: block; font-size: clamp(1.15rem, 2vw, 1.65rem); }
+.cabecalho small, footer { color: var(--suave); }
+.perfil {
+  position: absolute; top: 50%; right: 20px; transform: translateY(-50%);
+  display: grid; place-items: center; width: 32px; height: 32px;
+  color: white; background: #064ac7; border-radius: 50%;
+}
+main {
+  width: min(1120px, calc(100% - 40px));
+  margin: 44px auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr;
+  gap: 20px 24px;
+  align-items: start;
+}
+.introducao { grid-column: 1 / -1; }
+.introducao small {
+  color: #164bac; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .065em; font-size: .73rem;
+}
+h1 { margin: 5px 0 8px; font-size: clamp(1.8rem, 3vw, 2.55rem); letter-spacing: -.04em; }
+h2 { font-size: 1.3rem; margin: 0; }
+form, section { background: #fff; border: 1px solid var(--borda); border-radius: 12px; }
+form { grid-row: 2 / 4; padding: 0 22px 22px; }
+form h2 {
+  margin: 0 -22px 18px; padding: 18px 22px; background: #f8fafc;
+  border-radius: 12px 12px 0 0;
+}
+form h2::before { content: "✎"; color: var(--azul); margin-right: 8px; }
+label { display: block; margin: 16px 0 6px; font-weight: 600; font-size: .92rem; }
+input {
+  width: 100%; padding: 12px 14px; font: inherit; color: inherit;
+  background: white; border: 1px solid #ccd5df; border-radius: 6px;
+}
+button {
+  border: 0; border-radius: 6px; padding: 8px 12px;
+  font-size: .88rem; line-height: 1.4; font-family: inherit; font-weight: 600; cursor: pointer;
+}
+button:hover { filter: brightness(.93); }
+:where(button,input):focus-visible { outline: 3px solid #6c96fa; outline-offset: 2px; }
+.acoes-formulario { display: flex; gap: 8px; margin-top: 22px; }
+.btn-primario { flex: 1; color: white; background: var(--azul); min-height: 44px; }
+form:not(.editando) .btn-primario::before { content: "+ "; }
+.btn-secundario { background: #eef1f4; color: var(--tinta); }
+#mensagem { margin: 12px 0 0; color: #ab2534; }
+#mensagem:empty { display: none; }
+section { grid-column: 2; padding: 22px; min-width: 0; }
+section h2 { display: flex; align-items: center; gap: 6px; }
+section h2::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #a9660e; }
+#titulo-concluidas::before { background: #a5b1c4; }
+.contador, .tarefa-status {
+  border-radius: 99px; padding: 3px 9px; font: 600 .75rem/1.4 "Segoe UI", sans-serif;
+}
+.contador { margin-left: auto; color: #40546d; background: #edf1f5; }
+ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 12px; }
+.tarefa { overflow: hidden; border: 1px solid #e7ecf0; border-radius: 8px; }
+.tarefa-info {
+  display: grid; grid-template-columns: minmax(0,1fr) auto;
+  gap: 5px 10px; padding: 16px; align-items: start; overflow-wrap: anywhere;
+}
+.tarefa-disciplina { grid-column: 1; font-size: .88rem; color: var(--suave); }
+.tarefa-status { grid-column: 2; grid-row: 1; }
+.pendente { background: #ffe3c9; color: #874000; }
+.concluida { background: #deefe5; color: #28543b; }
+.tarefa-acoes {
+  display: flex; flex-wrap: wrap; justify-content: flex-end;
+  gap: 6px; padding: 8px; background: #f8fafc;
+}
+.btn-editar { background: white; color: #365782; }
+.btn-concluir { background: #084ac8; color: white; }
+.btn-excluir { background: transparent; color: #a52c39; }
+.vazio { text-align: center; padding: 20px 10px; border-radius: 8px; color: var(--suave); background: #f8fafb; }
+footer { margin-top: auto; padding: 28px 16px; text-align: center; font-size: .78rem; }
+@media (max-width: 720px) {
+  main { grid-template-columns: 1fr; grid-template-rows: auto; width: calc(100% - 28px); margin: 28px auto; }
+  form, section { grid-column: 1; grid-row: auto; }
+  .cabecalho { padding: 14px 42px; }
+  .perfil { right: 7px; width: 26px; height: 26px; }
+  section { padding: 16px; }
+}
