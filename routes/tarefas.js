@@ -12,15 +12,17 @@ const sqlAtualizar = db.prepare('UPDATE tarefas SET titulo = ?, disciplina = ? W
 const sqlConcluir = db.prepare("UPDATE tarefas SET status = 'Concluída' WHERE id = ?");
 const sqlExcluir = db.prepare('DELETE FROM tarefas WHERE id = ?');
 
-// Valida o corpo da requisição: título e disciplina são obrigatórios.
+// Repete no servidor os tipos e limites exigidos pelo formulário.
 function lerDados(corpo) {
-  const titulo = String(corpo?.titulo ?? '').trim();
-  const disciplina = String(corpo?.disciplina ?? '').trim();
-  return titulo && disciplina ? { titulo, disciplina } : null;
+  if (typeof corpo?.titulo !== 'string' || typeof corpo?.disciplina !== 'string') return null;
+  const titulo = corpo.titulo.trim();
+  const disciplina = corpo.disciplina.trim();
+  if (!titulo || titulo.length > 120 || !disciplina || disciplina.length > 80) return null;
+  return { titulo, disciplina };
 }
 
 const erroDados = (res) =>
-  res.status(400).json({ erro: 'Informe o título da tarefa e a disciplina.' });
+  res.status(400).json({ erro: 'Informe título e disciplina como texto. Use de 1 a 120 caracteres no título e de 1 a 80 na disciplina.' });
 const erroNaoEncontrada = (res) =>
   res.status(404).json({ erro: 'Tarefa não encontrada.' });
 

@@ -12,6 +12,7 @@ const listaPendentes = document.getElementById('lista-pendentes');
 const listaConcluidas = document.getElementById('lista-concluidas');
 
 let idEmEdicao = null; // null = cadastrando; número = editando essa tarefa
+let salvando = false;
 
 // ---------- Comunicação com o servidor ----------
 async function chamarApi(url, opcoes = {}) {
@@ -38,6 +39,7 @@ async function carregarTarefas() {
 
 // Executa uma ação (concluir, excluir), fecha a edição se era essa tarefa e recarrega a lista.
 async function executar(tarefa, chamada) {
+  if (salvando) return;
   try {
     await chamada();
     if (idEmEdicao === tarefa.id) sairDoModoEdicao();
@@ -116,6 +118,7 @@ function renderizar(tarefas) {
 
 // ---------- Modo de edição (o mesmo formulário serve para cadastrar e editar) ----------
 function entrarNoModoEdicao(tarefa) {
+  if (salvando) return;
   idEmEdicao = tarefa.id;
   campoTitulo.value = tarefa.titulo;
   campoDisciplina.value = tarefa.disciplina;
@@ -141,7 +144,15 @@ btnCancelar.addEventListener('click', sairDoModoEdicao);
 
 formulario.addEventListener('submit', async (evento) => {
   evento.preventDefault();
+  if (salvando) return;
   const dados = { titulo: campoTitulo.value, disciplina: campoDisciplina.value };
+  salvando = true;
+  btnSalvar.disabled = true;
+  btnCancelar.disabled = true;
+  campoTitulo.disabled = true;
+  campoDisciplina.disabled = true;
+  btnSalvar.textContent = 'Salvando...';
+  formulario.setAttribute('aria-busy', 'true');
   try {
     if (idEmEdicao === null) {
       await chamarApi(API, { method: 'POST', body: JSON.stringify(dados) });
@@ -152,6 +163,14 @@ formulario.addEventListener('submit', async (evento) => {
     await carregarTarefas();
   } catch (erro) {
     mostrarMensagem(erro.message);
+  } finally {
+    salvando = false;
+    btnSalvar.disabled = false;
+    btnCancelar.disabled = false;
+    campoTitulo.disabled = false;
+    campoDisciplina.disabled = false;
+    btnSalvar.textContent = idEmEdicao === null ? 'Adicionar tarefa' : 'Salvar alterações';
+    formulario.setAttribute('aria-busy', 'false');
   }
 });
 
